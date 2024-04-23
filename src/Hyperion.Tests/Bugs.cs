@@ -494,13 +494,16 @@ namespace Hyperion.Tests
         [Fact]
         public void CanRoundtripObjectDerivedFromGenericList()
         {
-            var obj = new ObjectDerivedFromGenericList {Text = "hello 🙂"};
+            var obj = new ObjectDerivedFromGenericList { Text = "hello 🙂" };
             var serializer = new Serializer();
             using var stream = new MemoryStream();
             serializer.Serialize(obj, stream);
             stream.Position = 0;
+            _output.WriteLine("Serialized payload: {0}", BitConverter.ToString(stream.ToArray()).Replace("-", ""));
             var roundtripped = serializer.Deserialize(stream);
             Assert.IsType<ObjectDerivedFromGenericList>(roundtripped);
+            var roundtrippedObj = (ObjectDerivedFromGenericList)roundtripped;
+            Assert.Equal("hello 🙂", roundtrippedObj.Text);
 
         }
 
