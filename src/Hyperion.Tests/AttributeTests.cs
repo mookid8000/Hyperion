@@ -49,10 +49,28 @@ namespace Hyperion.Tests
             Serialize(expected);
             Reset();
             var actual = Deserialize<Dog>();
-           
+
             Assert.Equal(expected.Name, actual.Name);
             Assert.Equal(expected.Barks, actual.Barks);
             Assert.Null(actual.Secret);
         }
+
+        [Fact]
+        public void ShouldNotSerializeFieldsMarkedAsNonSerialized()
+        {
+            var expected = new ObjectWithNonSerializedField { SecretField = "p4ssw0rd" };
+            Serialize(expected);
+            Reset();
+            var actual = Deserialize<ObjectWithNonSerializedField>();
+
+            Assert.Null(actual.SecretField);
+        }
+
+        class ObjectWithNonSerializedField
+        {
+            [NonSerialized]
+            public string SecretField;
+        }
+
     }
 }
